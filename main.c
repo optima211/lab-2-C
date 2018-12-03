@@ -106,7 +106,8 @@ int main() {
             printf("st10 year of birth is %d\n", st10.year);
             printf("st10 faculty is %c\n", st10.fac);
             break;
-        default:  printf("There is no such value!\n");
+        default:
+            printf("There is no such value!\n");
     }
     return 0;
 }
