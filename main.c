@@ -7,9 +7,10 @@ struct student {
     int year;
     char fac;
 };
+int x;
 
 int main() {
-    printf("Hello, World!\n");
+    printf("hello, User!\n");
     struct student st1;
     st1.surname = 'A';
     st1.year = 1998;
@@ -59,9 +60,25 @@ int main() {
     st10.surname = 'G';
     st10.year = 1982;
     st10.fac = 'm';
+    printf("---------------------\n Convention:\n 1 - Physic\n 2 - History\n 3 - Mathematics\n---------------------\n Insert faculty:\n");
+    scanf_s("%d", &x);
+    if (x == 1) {
+        printf("st1 faculty is %c\n", st1.surname);
+        printf("st1 surname is %d\n", st1.year);
+        printf("st1 faculty is %c\n", st1.fac);
 
-    printf("st1 faculty is %c\n", st1.surname);
-    printf("st1 surname is %d\n", st1.year);
-    printf("st1 faculty is %c\n", st1.fac);
+        printf("st3 faculty is %c\n", st3.surname);
+        printf("st3 surname is %d\n", st3.year);
+        printf("st3 faculty is %c\n", st3.fac);
+
+        printf("st4 faculty is %c\n", st4.surname);
+        printf("st4 surname is %d\n", st4.year);
+        printf("st4 faculty is %c\n", st4.fac);
+
+        printf("st7 faculty is %c\n", st7.surname);
+        printf("st7 surname is %d\n", st7.year);
+        printf("st7 faculty is %c\n", st7.fac);
+    } else { printf("finish!"); }
+    _getch();
     return 0;
 }
