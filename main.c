@@ -1,111 +1,108 @@
 #include <stdio.h>
+#include <stdlib.h>
 
-struct student {
-    char surname;
+int facc=1;
+struct person {
+    char surname[20];
     int year;
-    char fac;
+    int fac;
 };
-int x;
+
+int save(char *filename, struct person *st, int n);
+
+int load(char *filename, int facc);
 
 int main() {
-    printf("hello, User!\n");
-    struct student st1;
-    st1.surname = 'A';
-    st1.year = 1998;
-    st1.fac = 'p';
+    char *filename = "people.dat";
+    struct person people[] = {
+            "Artur", 1998, 1,
+            "Bob", 1999, 2,
+            "Kevin", 1980, 1,
+            "Kate", 1995, 1,
+            "Bill", 1993, 2,
+            "Marina", 1998, 3,
+            "Irina", 1997, 1,
+            "Marge", 1995, 3,
+            "Liza", 1993, 2,
+            "Mary", 1982, 3
+    };
+    printf("\nHello!\n---------------------\n Convention:\n 1 - Physic\n 2 - History\n 3 - Mathematics\n---------------------\n Insert faculty:\n\n");
 
-    struct student st2;
-    st2.surname = 'B';
-    st2.year = 1999;
-    st2.fac = 'h';
-
-    struct student st3;
-    st3.surname = 'C';
-    st3.year = 1980;
-    st3.fac = 'p';
-
-    struct student st4;
-    st4.surname = 'D';
-    st4.year = 1995;
-    st4.fac = 'p';
-
-    struct student st5;
-    st5.surname = 'E';
-    st5.year = 1993;
-    st5.fac = 'h';
-
-    struct student st6;
-    st6.surname = 'F';
-    st6.year = 1998;
-    st6.fac = 'm';
-
-    struct student st7;
-    st7.surname = 'G';
-    st7.year = 1997;
-    st7.fac = 'p';
-
-    struct student st8;
-    st8.surname = 'H';
-    st8.year = 1995;
-    st8.fac = 'm';
-
-    struct student st9;
-    st9.surname = 'I';
-    st9.year = 1993;
-    st9.fac = 'h';
-
-    struct student st10;
-    st10.surname = 'G';
-    st10.year = 1982;
-    st10.fac = 'm';
-    printf("---------------------\n Convention:\n 1 - Physic\n 2 - History\n 3 - Mathematics\n---------------------\n Insert faculty:\n");
-    scanf_s("%d", &x);
-    switch (x) {
-        case 1:
-            printf("st1 surname is %c\n", st1.surname);
-            printf("st1 year of birth is %d\n", st1.year);
-            printf("st1 faculty is %c\n", st1.fac);
-            printf("---------------------\n");
-            printf("st3 surname is %c\n", st3.surname);
-            printf("st3 year of birth is %d\n", st3.year);
-            printf("st3 faculty is %c\n", st3.fac);
-            printf("---------------------\n");
-            printf("st4 surname is %c\n", st4.surname);
-            printf("st4 year of birth is %d\n", st4.year);
-            printf("st4 faculty is %c\n", st4.fac);
-            printf("---------------------\n");
-            printf("st7 surname is %c\n", st7.surname);
-            printf("st7 year of birth is %d\n", st7.year);
-            printf("st7 faculty is %c\n", st7.fac);
-            break;
-        case 2:
-            printf("st2 surname is %c\n", st2.surname);
-            printf("st2 year of birth is %d\n", st2.year);
-            printf("st2 faculty is %c\n", st2.fac);
-            printf("---------------------\n");
-            printf("st5 surname is %c\n", st5.surname);
-            printf("st5 year of birth is %d\n", st5.year);
-            printf("st5 faculty is %c\n", st5.fac);
-            printf("---------------------\n");
-            printf("st9 surname is %c\n", st9.surname);
-            printf("st9 year of birth is %d\n", st9.year);
-            printf("st9 faculty is %c\n", st9.fac);
-            break;
-        case 3:
-            printf("st6 surname is %c\n", st6.surname);
-            printf("st6 year of birth is %d\n", st6.year);
-            printf("st6 faculty is %c\n", st6.fac);
-            printf("---------------------\n");
-            printf("st8 surname is %c\n", st8.surname);
-            printf("st8 year of birth is %d\n", st8.year);
-            printf("st8 faculty is %c\n", st8.fac);
-            printf("---------------------\n");
-            printf("st10 surname is %c\n", st10.surname);
-            printf("st10 year of birth is %d\n", st10.year);
-            printf("st10 faculty is %c\n", st10.fac);
-            break;
-        default:
-            printf("There is no such value!\n");
+    scanf_s("%d", &facc);
+    if((facc>3)||(facc<1)){printf("\nenter correct number!\n");}else{
+        int n = sizeof(people) / sizeof(people[0]);
+        save(filename, people, n);
+        load(filename, facc);
     }
+    return 0;
+}
+
+// запись в файл массива структур
+int save(char *filename, struct person *st, int n) {
+    FILE *fp;
+    char *c;
+    // число записываемых байтов
+    int size = n * sizeof(struct person);
+
+    if ((fp = fopen(filename, "wb")) == NULL) {
+        perror("Error occurred while opening file");
+        return 1;
+    }
+    // записываем количество структур
+    c = (char *) &n;
+    for (int i = 0; i < sizeof(int); i++) {
+        putc(*c++, fp);
+    }
+    // посимвольно записываем в файл все структуры
+    c = (char *) st;
+    for (int i = 0; i < size; i++) {
+        putc(*c, fp);
+        c++;
+    }
+    fclose(fp);
+    return 0;
+}
+
+// загрузка из файла массива структур
+int load(char *filename, int facc) {
+    FILE *fp;
+    char *c;
+    int m = sizeof(int);
+    int n, i;
+    // выделяем память для количества данных
+    int *pti = (int *) malloc(m);
+
+    if ((fp = fopen(filename, "r")) == NULL) {
+        perror("Error occurred while opening file");
+        return 1;
+    }
+    // считываем количество структур
+    c = (char *) pti;
+    while (m > 0) {
+        i = getc(fp);
+        if (i == EOF) break;
+        *c = i;
+        c++;
+        m--;
+    }
+    //получаем число элементов
+    n = *pti;
+    // выделяем память для считанного массива структур
+    struct person *ptr = (struct person *) malloc(n * sizeof(struct person));
+    c = (char *) ptr;
+    // после записи считываем посимвольно из файла
+    while ((i = getc(fp)) != EOF) {
+        *c = i;
+        c++;
+    }
+    // перебор загруженных элементов и вывод на консоль
+    printf("#, surname,      year,      fac\n");
+    for (int k = 0; k < n; k++) {
+        if ((ptr + k)->fac == facc)
+            printf("%-2d %-6s %11d %7d\n", k + 1, (ptr + k)->surname, (ptr + k)->year, (ptr + k)->fac);
+    }
+    free(pti);
+    free(ptr);
+    fclose(fp);
     return 0;
 }
